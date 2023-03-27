@@ -12,7 +12,7 @@ export function UserProvider({ children }) {
   }
   
   return (
-    <UserContext.Provider value={[ userData, setData ]}>
+    <UserContext.Provider value={{ userData, setData }}>
       {children}
     </UserContext.Provider>
   );
