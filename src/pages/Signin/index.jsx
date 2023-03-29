@@ -1,25 +1,59 @@
+import { useRef, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
+import { Form } from "../../components/Form";
+import { getTheme } from "../../components/GlobalStyle";
+import { InputText } from "../../components/InputText";
+import { Tooltip } from "../../components/Tooltip";
+import { GlobalThemeContext } from "../../contexts/GlobalThemeContext";
+import { useValue } from "../../hooks/useValue";
+import { useSignin } from "../../services/authApi";
 
 export default function SigninPage() {
+  const signin = useSignin();
+  const [login, updateLogin] = useValue();
+  const [password, updatePassword] = useValue();
+  const { mode } = useContext(GlobalThemeContext);
+  const loginRef = useRef(null);
+  const navigate = useNavigate();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    signin.act(login, password);
+  }
+
+  useEffect(() => {
+    if (!signin.loading && signin.error) loginRef.current.focus();
+  }, [signin.loading])
+
   return (
-    <SigninStyle>
+    <ThemeProvider theme={signin.error ? getTheme("inputError")[mode] : {}}>
+    <AuthStyle>
         <h1>Memorare</h1>
-      <Form className="form">
+      <Form className="form" onSubmit={handleSubmit}>
         <h2>Sign In</h2>
         <div className="inputs">
-          <InputText placeholder="E-mail or username"/>
-          <InputText type="password" placeholder="Password"/>
+          <InputText 
+            placeholder="E-mail or username" minLength="3" maxLength="16" required
+            value={login} onChange={updateLogin} ref={loginRef}
+          />
+          <InputText type="password" 
+            placeholder="Password" minLength="6" maxLength="30" required
+            value={password} onChange={updatePassword}
+          />
+          {signin.error && <Tooltip className="tooltip">Invalid user or password</Tooltip>}
         </div>
         <div className="options">
-          <div className="signup">Create account</div>
-          <button>Enter</button>
+          <div className="alt" onClick={() => navigate("/signup")}>Create account</div>
+          <button onClick={e => e.target.blur()}>Enter</button>
         </div>
       </Form>
-    </SigninStyle>
+    </AuthStyle>
+    </ThemeProvider>
   );
 }
 
-const SigninStyle = styled.div`
+export const AuthStyle = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -47,6 +81,11 @@ const SigninStyle = styled.div`
       margin-bottom: 32px;
     }
 
+    .tooltip {
+      margin-top: -6px;
+      margin-bottom: 2px;
+    }
+
     .inputs {
       display: flex;
       flex-direction: column;
@@ -62,7 +101,7 @@ const SigninStyle = styled.div`
       font-size: 15px;
       font-weight: 500;
 
-      .signup {
+      .alt {
         color: ${props => props.theme.primary};
         font-weight: bold;
         cursor: pointer;
@@ -85,97 +124,5 @@ const SigninStyle = styled.div`
         }
       }
     }
-  }
-`;
-
-function Form(props) {
-  return (
-    <FormStyle {...props}>
-      {props.children}
-    </FormStyle>
-  )
-}
-
-const FormStyle = styled.form`
-  width: 450px;
-  height: fit-content;
-  border: 1px solid ${props => props.theme.border};
-  background-color: ${props => props.theme.background};
-  border-radius: 8px;
-  padding: 48px;
-`;
-
-function InputText(props) {
-  return (
-    <InputTextStyle>
-        <input type="text" {...props}/>
-        <div className="style"/>
-        <div className="placeholder">{props.placeholder}</div>
-    </InputTextStyle>
-  );
-}
-
-const InputTextStyle = styled.div`
-  position: relative;
-  width: 100%;
-  height: 44px;
-  background-color: ${props => props.theme.background};
-  border-radius: 4px;
-  
-  > * {
-    position: absolute;
-    font-size: 16px;
-  }
-
-  input {
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: none;
-    padding: 0 14px;
-
-    ::placeholder {
-      color: transparent;
-    }
-  }
-
-  // PLACEHOLDER =====================================
-  .placeholder {
-    color: ${props => props.theme.placeholder};
-    display: flex;
-    align-items: center;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  input:focus-visible ~ .placeholder,
-  input:not(:placeholder-shown) ~ .placeholder,
-  input:focus-visible:not(:placeholder-shown) ~ .placeholder {
-    top: 0;
-    left: 8px;
-    padding: 0 6px;
-    background-color: ${props => props.theme.background};
-    color: ${props => props.theme.primary};
-    font-size: 12px;
-  }
-
-  input:not(:placeholder-shown) ~ .placeholder {
-    color: ${props => props.theme.placeholder};
-  }
-  
-  // STYLE ==========================================
-  .style {
-    transition: all ease .05s;
-    width: 100%;
-    height: 100%;
-    border: 1px solid ${props => props.theme.border};
-    border-radius: 4px;
-  }
-  
-  input:focus-visible ~ .style {
-    border-width: 2px;
-    border-color: ${props => props.theme.primary};
   }
 `;

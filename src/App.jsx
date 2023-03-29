@@ -1,6 +1,7 @@
 import { UserProvider } from "./contexts/UserContext";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SigninPage from "./pages/Signin";
+import SignupPage from "./pages/Signup";
 import styled from "styled-components";
 import { GlobalThemeContext, GlobalThemeProvider } from "./contexts/GlobalThemeContext";
 import { useContext } from "react";
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route index path="*" element={<Navigate to="/signin" />} />
         <Route path="signin" element={<SigninPage />} />
+        <Route path="signup" element={<SignupPage />} />
       </Routes>
       </Router>
     </UserProvider>
