@@ -1,15 +1,19 @@
 import { useRef, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
+import { Button } from "../../components/Button";
 import { Form } from "../../components/Form";
 import { getTheme } from "../../components/GlobalStyle";
 import { InputText } from "../../components/InputText";
 import { Tooltip } from "../../components/Tooltip";
 import { GlobalThemeContext } from "../../contexts/GlobalThemeContext";
+import { useRedirect } from "../../hooks/useRedirect";
 import { useValue } from "../../hooks/useValue";
 import { useSignin } from "../../services/authApi";
+import { getUserData, setUserData } from "../../utils/helper";
 
 export default function SigninPage() {
+  useRedirect(getUserData(), "/decks");
   const signin = useSignin();
   const [login, updateLogin] = useValue();
   const [password, updatePassword] = useValue();
@@ -24,6 +28,10 @@ export default function SigninPage() {
 
   useEffect(() => {
     if (!signin.loading && signin.error) loginRef.current.focus();
+    if (signin.data) {
+      setUserData(signin.data);
+      navigate("/decks");
+    }
   }, [signin.loading])
 
   return (
@@ -45,7 +53,7 @@ export default function SigninPage() {
         </div>
         <div className="options">
           <div className="alt" onClick={() => navigate("/signup")}>Create account</div>
-          <button onClick={e => e.target.blur()}>Enter</button>
+          <Button onClick={e => e.target.blur()}>Enter</Button>
         </div>
       </Form>
     </AuthStyle>
@@ -59,6 +67,7 @@ export const AuthStyle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: ${props => props.theme.backgroundColor};
 
   h1 {
     font-family: "Amiri", serif;
@@ -105,23 +114,6 @@ export const AuthStyle = styled.div`
         color: ${props => props.theme.primary};
         font-weight: bold;
         cursor: pointer;
-      }
-
-      button {
-        font: inherit;
-        appearance: none;
-        outline: none;
-        border: none;
-        padding: 12px 40px;
-        border-radius: 4px;
-        color: ${props => props.theme.fontLight};
-        background-color: ${props => props.theme.button};
-
-        :focus, :hover {
-          background-color: ${props => props.theme.background};
-          color: ${props => props.theme.fontContrast};
-          box-shadow: 0px 0px 0px 2px ${props => props.theme.button};
-        }
       }
     }
   }

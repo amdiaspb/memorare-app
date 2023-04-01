@@ -4,6 +4,9 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/700.css';
 import '@fontsource/amiri/700.css';
+import '@fontsource/amiri/700.css';
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/500.css";
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -13,7 +16,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: ${props => props.theme.backgroundColor};
+    background-color: ${props => props.theme.background};
   }
 
   button {

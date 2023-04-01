@@ -7,6 +7,9 @@ dependencies:
   '@fontsource/inter':
     specifier: ^4.5.15
     version: 4.5.15
+  '@fontsource/jetbrains-mono':
+    specifier: ^4.5.12
+    version: 4.5.12
   '@fontsource/roboto':
     specifier: ^4.5.8
     version: 4.5.8
@@ -491,6 +494,10 @@ packages:
 
   /@fontsource/inter@4.5.15:
     resolution: {integrity: sha512-FzleM9AxZQK2nqsTDtBiY0PMEVWvnKnuu2i09+p6DHvrHsuucoV2j0tmw+kAT3L4hvsLdAIDv6MdGehsPIdT+Q==}
+    dev: false
+
+  /@fontsource/jetbrains-mono@4.5.12:
+    resolution: {integrity: sha512-LJF1ala1/u+wXZmESFqIk08FA9yGX4/uAAleCHmXUMgEjvNAYFHUQQ7eK5hQQoBOwh99cU5suTrqYqEkgzwzPA==}
     dev: false
 
   /@fontsource/roboto@4.5.8:

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const InputText = forwardRef((props, ref) => {
   return (
-    <InputTextStyle>
+    <InputTextStyle className="input-text">
         <input type="text" {...props} ref={ref}/>
         <div className="style"/>
         <div className="placeholder">{props.placeholder}</div>

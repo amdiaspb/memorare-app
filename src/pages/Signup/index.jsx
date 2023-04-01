@@ -6,12 +6,15 @@ import { GlobalThemeContext } from "../../contexts/GlobalThemeContext";
 import { useValue } from "../../hooks/useValue";
 import { useSignup } from "../../services/authApi";
 import { AuthStyle } from "../Signin";
-import styled, { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "../../components/Tooltip";
 import { useState } from "react";
+import { useRedirect } from "../../hooks/useRedirect";
+import { getUserData } from "../../utils/helper";
 
 export default function SignupPage() {
+  useRedirect(getUserData(), "/decks");
   const signup = useSignup();
   const [name, updateName] = useValue();
   const [email, updateEmail] = useValue();

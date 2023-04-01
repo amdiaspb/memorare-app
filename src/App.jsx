@@ -1,4 +1,3 @@
-import { UserProvider } from "./contexts/UserContext";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SigninPage from "./pages/Signin";
 import SignupPage from "./pages/Signup";
@@ -6,21 +5,36 @@ import styled from "styled-components";
 import { GlobalThemeContext, GlobalThemeProvider } from "./contexts/GlobalThemeContext";
 import { useContext } from "react";
 import { GlobalStyle } from "./components/GlobalStyle";
+import { useState } from 'react';
+import WorkshopPage from './pages/Workshop';
+import { BasePage } from './pages/BasePage';
+import { WorkshopSession } from './pages/WorkshopSession';
+import { useEffect } from 'react';
+import DecksPage from './pages/Decks';
+import StudiesPage from './pages/Studies';
+import { StudiesSession } from './pages/StudiesSession';
 
 function App() {
   return (
     <GlobalThemeProvider>
-    <UserProvider>
       <GlobalStyle/>
       <ThemeButton/> {/* Testing Only */}
       <Router>
-      <Routes>
-        <Route index path="*" element={<Navigate to="/signin" />} />
-        <Route path="signin" element={<SigninPage />} />
-        <Route path="signup" element={<SignupPage />} />
-      </Routes>
+        <Routes>
+          <Route index path="*" element={<Navigate to="/signin" />} />
+          <Route path="signin" element={<SigninPage />} />
+          <Route path="signup" element={<SignupPage />} />
+
+          <Route path="decks" element={<DecksPage />} />
+          <Route path="decks/:deckId" element={<BasePage />} />
+
+          <Route path="studies" element={<StudiesPage />} />
+          <Route path="studies/session" element={<StudiesSession />} />
+
+          <Route path="workshop" element={<WorkshopPage/>} />
+          <Route path="workshop/session" element={<WorkshopSession/>} />
+        </Routes>
       </Router>
-    </UserProvider>
     </GlobalThemeProvider>
   );
 }
@@ -28,13 +42,22 @@ function App() {
 // Testing Only
 function ThemeButton() {
   const { mode, setMode } = useContext(GlobalThemeContext);
+  const [time, setTime] = useState();
+
+  useEffect(() => {
+    setInterval(() => {
+      const date = new Date();
+      setTime(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds())
+    }, 1000)
+  }, []);
+
   function switchTheme() {
     setMode(mode === "light" ? "dark" : "light");
   }
 
   return (
     <ThemeButtonStyle onClick={switchTheme}>
-      {mode}
+      {mode}, {time}
     </ThemeButtonStyle>
   );
 }
