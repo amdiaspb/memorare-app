@@ -6,7 +6,7 @@ export function Navbar({ onExit }) {
   const navigate = useNavigate();
 
   function goTo(path, runOnExit = true) {
-    if (runOnExit && onExit) onExit();
+    //if (runOnExit && onExit) onExit();
     navigate(path);
   }
 
@@ -30,7 +30,7 @@ const NavbarStyle = styled.nav`
   position: fixed;
   left: 0;
   top: 0;
-  width: 300px;
+  width: 64px;
   height: 100vh;
   border-left: 1px solid ${props => props.theme.border};
   border-right: 1px solid ${props => props.theme.border};

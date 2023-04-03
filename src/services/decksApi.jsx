@@ -15,6 +15,19 @@ export function useGetDecks() {
   return useAsync(req, false);
 }
 
+export function useGetDeckById() {
+  const req = (deckId) => {
+    const url = "/decks/" + deckId;
+    const token = getToken();
+    const config = { 
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    return api.get(url, config);
+  }
+
+  return useAsync(req, false);
+}
+
 export function useCreateDeck() {
   const req = () => {
     const url = "/decks";
@@ -28,3 +41,15 @@ export function useCreateDeck() {
   return useAsync(req, false);
 }
 
+export function usePatchDeck() {
+  const req = (deckId, obj) => {
+    const url = "/decks/" + deckId;
+    const token = getToken();
+    const config = { 
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    return api.patch(url, obj, config);
+  }
+
+  return useAsync(req, false);
+}

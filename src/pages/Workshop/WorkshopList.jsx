@@ -2,37 +2,43 @@ import styled from "styled-components";
 import { DeckItem } from "../../components/DeckItem";
 import { useEffect } from "react";
 import { useCreateDeck, useGetDecks } from "../../services/decksApi";
+import { useNavigate } from "react-router-dom";
 
-export function WorkshopMain({ setDeck }) {
+export function WorkshopList() {
   const decks = useGetDecks();
   const createDeck = useCreateDeck();
+  const navigate = useNavigate();
 
   useEffect(() => {
     decks.act(false);
   }, []);
   
   useEffect(() => {
-    if (createDeck.data) setDeck(createDeck.data);
+    if (createDeck.data) navigate("/workshop/" + createDeck.data.id);
   }, [createDeck.data]);
 
   function handleCreateDeck() {
     if (!createDeck.data) createDeck.act();
   }
 
+  function handleSelectDeck(deckId) {
+    navigate("/workshop/" + deckId);
+  }
+
   return (
-    <WorkshopMainStyle>
+    <WorkshopListStyle>
       <h1>Workshop</h1>
       <div className="create" onClick={handleCreateDeck}>New</div>
       <ol>
         {decks.data &&
-          decks.data.map(d => <DeckItem key={d.id} deck={d} onClick={() => setDeck(d)}/>)
+          decks.data.map(d => <DeckItem key={d.id} deck={d} onClick={() => handleSelectDeck(d.id)}/>)
         }
       </ol>
-    </WorkshopMainStyle>
+    </WorkshopListStyle>
   );
 }
 
-const WorkshopMainStyle = styled.main`
+const WorkshopListStyle = styled.main`
   h1 {
     font-size: 48px;
     text-align: center;

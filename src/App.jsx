@@ -8,11 +8,13 @@ import { GlobalStyle } from "./components/GlobalStyle";
 import { useState } from 'react';
 import WorkshopPage from './pages/Workshop';
 import { BasePage } from './pages/BasePage';
-import { WorkshopSession } from './pages/WorkshopSession';
+import { WorkshopCards } from './pages/WorkshopSession/WorkshopCards';
 import { useEffect } from 'react';
 import DecksPage from './pages/Decks';
 import StudiesPage from './pages/Studies';
 import { StudiesSession } from './pages/StudiesSession';
+import { WorkshopReadme } from './pages/WorkshopSession/WorkshopReadme';
+import { WorkshopEdit } from './pages/Workshop/WorkshopEdit';
 
 function App() {
   return (
@@ -32,7 +34,9 @@ function App() {
           <Route path="studies/session" element={<StudiesSession />} />
 
           <Route path="workshop" element={<WorkshopPage/>} />
-          <Route path="workshop/session" element={<WorkshopSession/>} />
+          <Route path="workshop/:deckId" element={<WorkshopEdit/>} />
+          <Route path="workshop/:deckId/cards" element={<WorkshopCards/>} />
+          <Route path="workshop/:deckId/readme" element={<WorkshopReadme/>} />
         </Routes>
       </Router>
     </GlobalThemeProvider>

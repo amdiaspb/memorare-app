@@ -37,7 +37,8 @@ export function getTheme(theme = "light") {
     button: "#3175C2",
     fontContrast: "#3175C2",
     placeholder: "#757575",
-    placeholderSec: "#757575"
+    placeholderSec: "#757575",
+    secondTab: "#eeeeee"
   }
 
   if (theme === "dark") return {
