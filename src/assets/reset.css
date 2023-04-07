@@ -55,3 +55,7 @@ body {
 	font-size: 100%;
 	list-style-type: none;
 }
+
+p {
+    display: inline;
+}

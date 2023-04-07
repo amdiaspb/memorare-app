@@ -22,6 +22,8 @@ const ButtonStyle = styled.button`
   border-radius: 4px;
   color: ${props => props.theme.fontLight};
   background-color: ${props => props.theme.button};
+  white-space: nowrap;
+  height: 40px;
 
   :focus, :hover {
     background-color: ${props => props.theme.background};

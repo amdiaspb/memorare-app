@@ -1,20 +1,27 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import SigninPage from "./pages/Signin";
-import SignupPage from "./pages/Signup";
-import styled from "styled-components";
 import { GlobalThemeContext, GlobalThemeProvider } from "./contexts/GlobalThemeContext";
-import { useContext } from "react";
 import { GlobalStyle } from "./components/GlobalStyle";
+import { useContext } from "react";
 import { useState } from 'react';
-import WorkshopPage from './pages/Workshop';
-import { BasePage } from './pages/BasePage';
-import { WorkshopCards } from './pages/WorkshopSession/WorkshopCards';
 import { useEffect } from 'react';
+import styled from "styled-components";
+
+import SignupPage from "./pages/Signup";
+import SigninPage from "./pages/Signin";
+
 import DecksPage from './pages/Decks';
+import DecksReadme from './pages/DecksReadme';
+
 import StudiesPage from './pages/Studies';
+import StudiesInfo from './pages/StudiesInfo';
 import { StudiesSession } from './pages/StudiesSession';
-import { WorkshopReadme } from './pages/WorkshopSession/WorkshopReadme';
+
+import WorkshopPage from './pages/Workshop';
 import { WorkshopEdit } from './pages/Workshop/WorkshopEdit';
+import { WorkshopCards } from './pages/WorkshopSession/WorkshopCards';
+import { WorkshopReadme } from './pages/WorkshopSession/WorkshopReadme';
+
+import dayjs from 'dayjs';
 
 function App() {
   return (
@@ -28,10 +35,11 @@ function App() {
           <Route path="signup" element={<SignupPage />} />
 
           <Route path="decks" element={<DecksPage />} />
-          <Route path="decks/:deckId" element={<BasePage />} />
+          <Route path="decks/:deckId" element={<DecksReadme />} />
 
           <Route path="studies" element={<StudiesPage />} />
-          <Route path="studies/session" element={<StudiesSession />} />
+          <Route path="studies/:studyId" element={<StudiesInfo />} />
+          <Route path="studies/:studyId/session" element={<StudiesSession />} />
 
           <Route path="workshop" element={<WorkshopPage/>} />
           <Route path="workshop/:deckId" element={<WorkshopEdit/>} />
@@ -46,12 +54,11 @@ function App() {
 // Testing Only
 function ThemeButton() {
   const { mode, setMode } = useContext(GlobalThemeContext);
-  const [time, setTime] = useState();
+  const [time, setTime] = useState(dayjs().format("HH:mm:ss"));
 
   useEffect(() => {
     setInterval(() => {
-      const date = new Date();
-      setTime(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds())
+      setTime(dayjs().format("HH:mm:ss"));
     }, 1000)
   }, []);
 
@@ -67,6 +74,7 @@ function ThemeButton() {
 }
 
 const ThemeButtonStyle = styled.button`
+  font-family: "JetBrains Mono", monospace;
   background-color: ${props => props.theme.background};
   position: fixed;
   right: 32px;

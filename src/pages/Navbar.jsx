@@ -30,7 +30,7 @@ const NavbarStyle = styled.nav`
   position: fixed;
   left: 0;
   top: 0;
-  width: 64px;
+  width: 280px;
   height: 100vh;
   border-left: 1px solid ${props => props.theme.border};
   border-right: 1px solid ${props => props.theme.border};

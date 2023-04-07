@@ -21,7 +21,7 @@ const BasePageStyle = styled.div`
     align-items: center;
 
     main {
-      width: 1000px;
+      width: 900px;
     }
   }
 `;

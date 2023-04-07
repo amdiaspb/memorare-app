@@ -1,42 +1,43 @@
 import { useEffect } from "react";
-import { useRef } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import { Button } from "../../components/Button";
-import { useValue } from "../../hooks/useValue";
-import { getUserData } from "../../utils/helper";
 import { BasePage } from "../BasePage";
-import { useGetCardsByDeckId, useGetStudySession, usePatchStudySession } from "../../services/generalApi";
+import { useGetStudySession, usePatchStudySession } from "../../services/generalApi";
 import dayjs from "dayjs";
+import { useGetDeckSnapshot } from "../../services/decksApi";
+import { useParams } from "react-router-dom";
 
 export function StudiesSession() {
+  const getSession = useGetStudySession();
+  const patchSession = usePatchStudySession();
   const [session, setSession] = useState();
   const [state, setState] = useState();
   const [content, setContent] = useState();
-  const [done, setDone] = useState(false);
+
+  const [cards, setCards] = useState();
   const [card, setCard] = useState();
   const [show, setShow] = useState(false);
+  const [done, setDone] = useState(false);
   
-  const [text, updateText, setText] = useValue();
-  const cards = useGetCardsByDeckId(); // get deckSnapshot (=== cards)
-  const getSession = useGetStudySession();
-  const patchSession = usePatchStudySession();
-  const studyId = useRef(getUserData().sessionStudyId);
+  const deckSnapshot = useGetDeckSnapshot(); // get deckSnapshot (=== cards)
+  const { studyId } = useParams();
 
   // SECTION 1 ===================================================
 
   // GET
   useEffect(() => {
-    getSession.act(studyId.current);
-    cards.act(1); // get deckSnapshot (=== cards)
+    getSession.act(studyId);
   }, []);
 
   // FORMAT
   useEffect(() => {
     if (getSession.data && !session) {
-      const { id, state, content, intervals } = getSession.data;
-      setState(JSON.parse(state));
+      const { id, state, content, intervals, deckSnapshotId } = getSession.data;
+      deckSnapshot.act(deckSnapshotId);
 
+      setSession({ id, intervals });
+      setState(JSON.parse(state));
       const parsedContent = JSON.parse(content);
       const review =  parsedContent.review;
       for (let i = 0; i < review.length; i++) {
@@ -47,16 +48,18 @@ export function StudiesSession() {
         study[i].date = dayjs(study[i].date);
       }
       setContent(parsedContent); // get today reviews
-
-      setSession({ id, intervals });
     }
   }, [getSession.data]);
 
-  // DEBUG
   useEffect(() => {
-    if (cards.data) console.log("CARDS:", cards.data);
-  }, [cards.data]);
-
+    if (deckSnapshot.data) {
+      console.log("DECK-SNAPSHOT:", deckSnapshot.data);
+      console.log("CARDS:", JSON.parse(deckSnapshot.data.cards));
+      setCards(JSON.parse(deckSnapshot.data.cards));
+    }
+  }, [deckSnapshot.data]);
+  
+  // DEBUG
   useEffect(() => {
     if (content) {
       console.log("CONTENT:", content);
@@ -206,27 +209,29 @@ export function StudiesSession() {
   }
 
   function updateSession(state, content) {
-    patchSession.act(studyId.current, { state, content });
+    patchSession.act(studyId, { state, content });
   }
+
+
 
   // SECTION 3 ===================================================
 
   return(
     <BasePage>
-      <StudiesSessionStyle>
+      {card ? <StudiesSessionStyle>
         <div className="card">
           <div className="front">
             <div className="footnote">
-              #{(card && cards.data) && cards.data[card.index].id}
+              #{card && card.index + 1}
             </div>
             <div className="text">
-              {(card && cards.data) && cards.data[card.index].front}
+              {(card && cards) && cards[card.index].front}
             </div>
           </div>
           {show && <div className="back">
             <hr/>
             <div className="text">
-              {(card && cards.data) && cards.data[card.index].back}
+              {(card && cards) && cards[card.index].back}
             </div>
           </div>}
         </div>
@@ -238,7 +243,7 @@ export function StudiesSession() {
             <Button onClick={() => setShow(false)}>Hide</Button>
           </> : <Button onClick={() => setShow(true)}>Show</Button>}
         </div>
-      </StudiesSessionStyle>
+      </StudiesSessionStyle> : <div>You finished your studies today :D</div>}
     </BasePage>
   );
 }

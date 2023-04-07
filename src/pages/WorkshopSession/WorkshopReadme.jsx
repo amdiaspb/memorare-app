@@ -1,12 +1,10 @@
 import { useEffect } from "react";
-import { useRef } from "react";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "../../components/Button";
 import { useValue } from "../../hooks/useValue";
 import { useGetDeckById, usePatchDeck } from "../../services/decksApi";
-import { getUserData } from "../../utils/helper";
 import { BasePage } from "../BasePage";
 
 export function WorkshopReadme() {
@@ -14,6 +12,7 @@ export function WorkshopReadme() {
   const { deckId } = useParams();
   const deck = useGetDeckById();
   const patchDeck = usePatchDeck();
+  const navigate = useNavigate();
 
   // SECTION 1 ===================================================
 
@@ -44,7 +43,7 @@ export function WorkshopReadme() {
           </div>
           <div className="options">
             <Button onClick={handleSave}>Save</Button>
-            <Button>Exit</Button>
+            <Button onClick={() => navigate("/workshop/" + deckId)}>Exit</Button>
           </div>
         </div>
       </WorkshopSessionStyle>

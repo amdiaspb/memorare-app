@@ -3,36 +3,30 @@ import { BasePage } from "../BasePage";
 import styled from "styled-components";
 import { DeckItem } from "../../components/DeckItem";
 import { useCreateStudySession, useGetStudies } from "../../services/generalApi";
-import { mergeUserState } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 
 export default function DecksPage() {
   const studies = useGetStudies();
-  const createStudySession = useCreateStudySession();
   const navigate = useNavigate();
+  const createStudySession = useCreateStudySession();
 
   useEffect(() => {
     studies.act();
   }, []);
 
-  useEffect(() => {
-    if (createStudySession.data) {
-      const sessionStudyId = createStudySession.data.study_id;
-      mergeUserState({ sessionStudyId });
-      navigate("/studies/session");
-    }
-  }, [createStudySession.data]);
-
-  function handleCreateStudySession(study) {
-    createStudySession.act(study.id); // getsert
+  async function selectStudySession(study) {
+    // it will not create(throw error) if already exists
+    await createStudySession.act(study.id);
+    navigate("/studies/" + study.id);
   }
 
   return (
     <BasePage>
       <StudiesPageStyle>
+        <h1>| &nbsp;Studies</h1>
         <ol>
           {studies.data && studies.data.map(s => 
-            <DeckItem key={s.id} deck={s} onClick={() => handleCreateStudySession(s)}/>
+            <DeckItem key={s.id} deck={s} onClick={() => selectStudySession(s)}/>
           )}
         </ol>
       </StudiesPageStyle>
@@ -41,8 +35,14 @@ export default function DecksPage() {
 }
 
 const StudiesPageStyle = styled.main`
+  h1 {
+    align-self: flex-start;
+    font-size: 48px;
+    margin-top: 96px;
+    margin-bottom: 48px;
+  }
+  
   ol {
-    margin-top: 300px;
     display: flex;
     flex-direction: column;
     gap: 8px;

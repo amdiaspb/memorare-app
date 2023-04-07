@@ -53,3 +53,44 @@ export function usePatchDeck() {
 
   return useAsync(req, false);
 }
+
+export function useDeleteDeck() {
+  const req = (deckId) => {
+    const url = "/decks/" + deckId;
+    const token = getToken();
+    const config = { 
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    return api.delete(url, config);
+  }
+
+  return useAsync(req, false);
+}
+
+// DeckSnapshot
+
+export function useUpdateDeckSnapshot() {
+  const req = (deckId) => {
+    const url = `/decks/${deckId}/snapshot` ;
+    const token = getToken();
+    const config = { 
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    return api.put(url, {}, config);
+  }
+
+  return useAsync(req, false);
+}
+
+export function useGetDeckSnapshot() {
+  const req = (deckSnapshotId) => {
+    const url = "/decks/snapshot/" + deckSnapshotId ;
+    const token = getToken();
+    const config = { 
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    return api.get(url, config);
+  }
+
+  return useAsync(req, false);
+}

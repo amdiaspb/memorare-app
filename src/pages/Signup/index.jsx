@@ -1,7 +1,7 @@
 import { useRef, useEffect, useContext } from "react";
 import { Form } from "../../components/Form";
 import { getTheme } from "../../components/GlobalStyle";
-import { InputText } from "../../components/InputText";
+import { InputText } from "../../components/Inputs";
 import { GlobalThemeContext } from "../../contexts/GlobalThemeContext";
 import { useValue } from "../../hooks/useValue";
 import { useSignup } from "../../services/authApi";
@@ -12,6 +12,7 @@ import { Tooltip } from "../../components/Tooltip";
 import { useState } from "react";
 import { useRedirect } from "../../hooks/useRedirect";
 import { getUserData } from "../../utils/helper";
+import { Button } from "../../components/Button";
 
 export default function SignupPage() {
   useRedirect(getUserData(), "/decks");
@@ -113,7 +114,7 @@ export default function SignupPage() {
         </div>
         <div className="options">
           <div className="alt" onClick={() => navigate("/signin")}>Sign in instead</div>
-          <button onClick={e => e.target.blur()}>Sign up</button>
+          <Button onClick={e => e.target.blur()}>Sign up</Button>
         </div>
       </Form>
     </AuthStyle> 

@@ -4,7 +4,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { Button } from "../../components/Button";
 import { Form } from "../../components/Form";
 import { getTheme } from "../../components/GlobalStyle";
-import { InputText } from "../../components/InputText";
+import { InputText } from "../../components/Inputs";
 import { Tooltip } from "../../components/Tooltip";
 import { GlobalThemeContext } from "../../contexts/GlobalThemeContext";
 import { useRedirect } from "../../hooks/useRedirect";

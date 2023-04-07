@@ -11,6 +11,16 @@ export const InputText = forwardRef((props, ref) => {
   );
 });
 
+export const InputNumber = forwardRef((props, ref) => {
+  return (
+    <InputTextStyle className="input-number">
+        <input type="number" {...props} ref={ref}/>
+        <div className="style"/>
+        <div className="placeholder">{props.placeholder}</div>
+    </InputTextStyle>
+  );
+});
+
 const InputTextStyle = styled.div`
   position: relative;
   width: 100%;
