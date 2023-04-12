@@ -9,7 +9,7 @@ import { InputText } from "../../components/Inputs";
 import { Modal } from "../../components/Modal";
 import { useValue } from "../../hooks/useValue";
 import { useDeleteDeck, useGetDeckById, useGetDeckSnapshot, usePatchDeck, useUpdateDeckSnapshot } from "../../services/decksApi";
-import { useGetCardsInfoByDeckId } from "../../services/generalApi";
+import { useGetCardsInfoByDeckId } from "../../services/cardsApi";
 import { BasePage } from "../BasePage";
 
 export function WorkshopEdit() {
@@ -54,7 +54,8 @@ export function WorkshopEdit() {
 
   async function handlePublishSync() {
     try {
-      await patchDeck.act(deckId, { name: title, visibility });
+      const data = { name: title, visibility, readme: deck.data.readme };
+      await patchDeck.act(deckId, data);
       updateDeckSnapshot.act(deckId);
     } catch (err) {
       
@@ -196,6 +197,10 @@ const CheckboxStyle = styled.div`
   gap: 8px;
   cursor: pointer;
 
+  .text {
+    font-family: 'Inter', sans-serif;
+  }
+
   .box {
     width: 14px;
     height: 14px;
@@ -205,4 +210,5 @@ const CheckboxStyle = styled.div`
     padding: 2px;
     border-radius: 50%;
   }
+  
 `;

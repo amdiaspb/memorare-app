@@ -7,7 +7,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { Button } from "../../components/Button";
 import { Modal } from "../../components/Modal";
 import { useValue } from "../../hooks/useValue";
-import { useCreateCard, useDeleteCard, useGetCardById, useGetCardsInfoByDeckId, usePatchCard } from "../../services/generalApi";
+import { useCreateCard, useDeleteCard, useGetCardById, useGetCardsInfoByDeckId, usePatchCard } from "../../services/cardsApi";
 import { getUserData } from "../../utils/helper";
 import { BasePage } from "../BasePage";
 

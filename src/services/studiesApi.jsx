@@ -17,7 +17,7 @@ export function useGetStudies() {
 
 export function useGetStudyInfo() {
   const req = (studyId) => {
-    const url = `/studies/${studyId}/info`;
+    const url = `/studies/${studyId}`;
     const token = getToken();
     const config = { 
       headers: { Authorization: `Bearer ${token}` }
@@ -101,73 +101,6 @@ export function usePatchStudySession() {
       headers: { Authorization: `Bearer ${token}` }
     };
     return api.patch(url, data, config);
-  }
-
-  return useAsync(req, false);
-}
-
-// =======================================================
-
-export function useGetCardById() {
-  const req = (cardId) => {
-    const url = "/cards/" + cardId;
-    const token = getToken();
-    const config = { 
-      headers: { Authorization: `Bearer ${token}` }
-    };
-    return api.get(url, config);
-  }
-
-  return useAsync(req, false);
-}
-
-export function useGetCardsInfoByDeckId() {
-  const req = (deckId) => {
-    const url = "/cards/deck/" + deckId;
-    const token = getToken();
-    const config = { 
-      headers: { Authorization: `Bearer ${token}` }
-    };
-    return api.get(url, config);
-  }
-
-  return useAsync(req, false);
-}
-
-export function usePatchCard() {
-  const req = (cardId, obj) => { // { front, back }
-    const url = "/cards/" + cardId;
-    const token = getToken();
-    const config = { 
-      headers: { Authorization: `Bearer ${token}` }
-    };
-    return api.patch(url, obj, config);
-  }
-
-  return useAsync(req, false);
-}
-
-export function useCreateCard() {
-  const req = (deckId) => {
-    const url = "/cards";
-    const token = getToken();
-    const config = { 
-      headers: { Authorization: `Bearer ${token}` }
-    };
-    return api.post(url, { deckId }, config);
-  }
-
-  return useAsync(req, false);
-}
-
-export function useDeleteCard() {
-  const req = (cardId) => {
-    const url = "/cards/" + cardId;
-    const token = getToken();
-    const config = { 
-      headers: { Authorization: `Bearer ${token}` }
-    };
-    return api.delete(url, config);
   }
 
   return useAsync(req, false);

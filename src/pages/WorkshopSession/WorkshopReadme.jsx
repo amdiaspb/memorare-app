@@ -27,7 +27,8 @@ export function WorkshopReadme() {
   }, [deck.data]);
 
   function handleSave() {
-    patchDeck.act(deckId, { readme: text });
+    const data = { readme: text, name: deck.data.name, visibility: deck.data.visibility };
+    patchDeck.act(deckId, data);
   }
 
   // SECTION 2 ===================================================

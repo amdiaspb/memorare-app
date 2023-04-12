@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import { useGetDeckById } from "../../services/decksApi";
 import { BasePage } from "../BasePage";
 import styled from "styled-components";
-import { useCreateStudy } from "../../services/generalApi";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useGetDeckById } from "../../services/decksApi";
+import { useCreateStudy } from "../../services/studiesApi";
 import { Button } from "../../components/Button";
 
 export default function DecksReadme() {

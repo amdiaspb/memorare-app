@@ -2,21 +2,18 @@ import { useEffect } from "react";
 import { BasePage } from "../BasePage";
 import styled from "styled-components";
 import { DeckItem } from "../../components/DeckItem";
-import { useCreateStudySession, useGetStudies } from "../../services/generalApi";
+import { useGetStudies } from "../../services/studiesApi";
 import { useNavigate } from "react-router-dom";
 
 export default function DecksPage() {
   const studies = useGetStudies();
   const navigate = useNavigate();
-  const createStudySession = useCreateStudySession();
 
   useEffect(() => {
     studies.act();
   }, []);
 
   async function selectStudySession(study) {
-    // it will not create(throw error) if already exists
-    await createStudySession.act(study.id);
     navigate("/studies/" + study.id);
   }
 

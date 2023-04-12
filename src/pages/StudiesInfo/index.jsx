@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { BasePage } from "../BasePage";
 import styled from "styled-components";
-import { useGetStudyInfo } from "../../services/generalApi";
+import { useGetStudyInfo } from "../../services/studiesApi";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState } from "react";

@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Button } from "../../components/Button";
 import { BasePage } from "../BasePage";
-import { useGetStudySession, usePatchStudySession } from "../../services/generalApi";
+import { useGetStudySession, usePatchStudySession } from "../../services/studiesApi";
 import dayjs from "dayjs";
 import { useGetDeckSnapshot } from "../../services/decksApi";
 import { useParams } from "react-router-dom";

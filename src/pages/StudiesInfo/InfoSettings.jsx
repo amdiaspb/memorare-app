@@ -5,7 +5,7 @@ import { Button } from "../../components/Button";
 import { InputNumber } from "../../components/Inputs";
 import { Modal } from "../../components/Modal";
 import { useValue } from "../../hooks/useValue";
-import { useDeleteStudy, usePatchStudy } from "../../services/generalApi";
+import { useDeleteStudy, usePatchStudy } from "../../services/studiesApi";
 
 export function InfoSettings({ studyId, studyInfo, setShowInfo, updateInfo }) {
   const [hardInterval, updateHardInterval] = useValue(studyInfo.hard_interval);
@@ -24,8 +24,9 @@ export function InfoSettings({ studyId, studyInfo, setShowInfo, updateInfo }) {
   async function handleSubmit(e) {
     e.preventDefault();
     const data = {
-      hardInterval, goodInterval, easyInterval,
-      cardsLimit, reviewsLimit, cardsRandom
+      hard_interval: hardInterval, good_interval: goodInterval, easy_interval: easyInterval,
+      cards_limit: cardsLimit, reviews_limit: reviewsLimit, cards_random: cardsRandom,
+      reviews_random: studyInfo.reviews_random
     }
     await patchStudy.act(studyId, data);
     updateInfo();
