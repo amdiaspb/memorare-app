@@ -13,6 +13,9 @@ import { useState } from "react";
 import { useRedirect } from "../../hooks/useRedirect";
 import { getUserData } from "../../utils/helper";
 import { Button } from "../../components/Button";
+import { IoSparklesSharp } from "react-icons/io5";
+import { MdOutlineManageAccounts } from "react-icons/md";
+import { IconContext } from "react-icons";
 
 export default function SignupPage() {
   useRedirect(getUserData(), "/decks");
@@ -42,7 +45,7 @@ export default function SignupPage() {
       if (signup.error) {
         const { item } = signup.error.data;
         if (item === "username") nameRef.current.focus();
-        if (item === "email") emailRef.current.focus();
+        if (item === "email" || signup.error.status === 400) emailRef.current.focus();
       }
       if (!isPasswordEqual.current) {
         passwordRef.current.focus();
@@ -53,9 +56,11 @@ export default function SignupPage() {
 
   return (
     <AuthStyle>
-        <h1>Memorare</h1>
+      <h1><IoSparklesSharp/> Memorare</h1>
       <Form className="form" onSubmit={handleSubmit}>
-        <h2>Create your account</h2>
+        <IconContext.Provider value={{ size: "1.4em" }}>
+          <h2><MdOutlineManageAccounts/> Create your account</h2>
+        </IconContext.Provider>
         <div className="inputs">
           {signup.error?.data.item === "username" ?
             <ThemeProvider theme={getTheme("inputError")[mode]}>
@@ -72,13 +77,13 @@ export default function SignupPage() {
             />
           }
 
-          {signup.error?.data.item === "email" ?
+          {signup.error?.data.item === "email" || signup.error?.status === 400 ?
             <ThemeProvider theme={getTheme("inputError")[mode]}>
               <InputText type="email"
                 placeholder="E-mail" maxLength="30" required
                 value={email} onChange={updateEmail} ref={emailRef}
               />
-              <Tooltip className="tooltip">E-mail already in use.</Tooltip>
+              <Tooltip className="tooltip">{signup.error.status === 400 ? "Invalid e-mail." : "E-mail already in use."}</Tooltip>
             </ThemeProvider>
             :
             <InputText type="email"

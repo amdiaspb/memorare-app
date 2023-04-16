@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { InfoMain } from "./InfoMain";
 import { InfoSettings } from "./InfoSettings";
+import { TbBook } from "react-icons/tb";
+import { IconContext } from "react-icons";
 
 export default function StudiesInfo() {
   const studyInfo = useGetStudyInfo();
@@ -22,7 +24,7 @@ export default function StudiesInfo() {
   useEffect(() => {
     if (studyInfo.data) {
       setState(JSON.parse(studyInfo.data.state));
-      console.log("INFO: ", studyInfo.data);
+      // console.log("INFO: ", studyInfo.data);
     }
   }, [studyInfo.data]);
 
@@ -34,13 +36,15 @@ export default function StudiesInfo() {
   return (
     <BasePage>
       <StudiesInfoStyle>
-        <h1>| &nbsp;Studies</h1>
+        <IconContext.Provider value={{ size: "1.4em" }}>
+        <h1><TbBook/> Studies</h1>
         { showInfo 
           ? <InfoMain state={state} studyInfo={studyInfo.data}
               selectStudySession={selectStudySession} setShowInfo={setShowInfo}/>
           : <InfoSettings studyId={studyId} studyInfo={studyInfo.data} 
               setShowInfo={setShowInfo} updateInfo={() => studyInfo.act(studyId)}/>
         }
+        </IconContext.Provider>
       </StudiesInfoStyle>
     </BasePage>
   );
@@ -48,6 +52,9 @@ export default function StudiesInfo() {
 
 const StudiesInfoStyle = styled.main`
   h1 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     align-self: flex-start;
     font-size: 48px;
     margin-top: 96px;

@@ -11,6 +11,11 @@ import { useValue } from "../../hooks/useValue";
 import { useDeleteDeck, useGetDeckById, useGetDeckSnapshot, usePatchDeck, useUpdateDeckSnapshot } from "../../services/decksApi";
 import { useGetCardsInfoByDeckId } from "../../services/cardsApi";
 import { BasePage } from "../BasePage";
+import { ButtonContrast } from "../../components/ButtonContrast";
+import { Tooltip } from "../../components/Tooltip";
+import { useRef } from "react";
+import { TbTools, TbSettings } from "react-icons/tb";
+import { IconContext } from "react-icons";
 
 export function WorkshopEdit() {
   const [title, updateTitle, setTitle] = useValue();
@@ -24,7 +29,8 @@ export function WorkshopEdit() {
   const patchDeck = usePatchDeck();
   const deleteDeck = useDeleteDeck();
   const [deleteDisplay, setDeleteDisplay] = useState(false);
-
+  const [saved, setSaved] = useState(false);
+  const timeout = useRef(null);
 
   useEffect(() => {
     deck.act(deckId);
@@ -39,6 +45,13 @@ export function WorkshopEdit() {
     }
   }, [deck.data]);
 
+  useEffect(() => {
+    if (!updateDeckSnapshot.loading && updateDeckSnapshot.data) {
+      setSaved(true);
+      clearTimeout(timeout.current);
+      timeout.current = setTimeout(() => setSaved(false), 1500);
+    }
+  }, [updateDeckSnapshot.loading]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -56,7 +69,7 @@ export function WorkshopEdit() {
     try {
       const data = { name: title, visibility, readme: deck.data.readme };
       await patchDeck.act(deckId, data);
-      updateDeckSnapshot.act(deckId);
+      await updateDeckSnapshot.act(deckId);
     } catch (err) {
       
     }
@@ -71,20 +84,22 @@ export function WorkshopEdit() {
   return (
     <BasePage>
       <Modal message="Are you sure?" display={deleteDisplay} setDisplay={setDeleteDisplay}>
-      <ThemeProvider theme={{button: "#262626", fontContrast: "#262626"}}>
-        <Button onClick={handleDeleteDeck}>Yes</Button></ThemeProvider>
+        <ButtonContrast onClick={handleDeleteDeck}>Yes</ButtonContrast>
         <Button onClick={() => setDeleteDisplay(false)}>Cancel</Button>
       </Modal>
 
       <WorkshopEditStyle>
-        <h1>| &nbsp;Workshop</h1>
-        <ThemeProvider theme={{button: "#262626", fontContrast: "#262626"}}>
-          <Button onClick={() => setDeleteDisplay(true)}>Delete</Button></ThemeProvider>
+        <IconContext.Provider value={{ size: "1.4em" }}>
+          <h1><TbTools/> Workshop</h1>
+        </IconContext.Provider>
+        <ButtonContrast onClick={() => setDeleteDisplay(true)}>Delete</ButtonContrast>
         <Form className="form" onSubmit={handleSubmit}>
-          <h2>Settings</h2>
+          <IconContext.Provider value={{ size: "1.2em" }}>
+            <h2><TbSettings/> Settings</h2>
+          </IconContext.Provider>
           <div className="inputs">
             <InputText placeholder="Title" value={title} onChange={updateTitle}/>
-            <InputText placeholder="Tags"/>
+            {/* <InputText placeholder="Tags"/> */}
             <div className="visibility">
               <div className="title">Visibility: </div>
               <Checkbox checked={!visibility} onClick={() => setVisibility(false)}>Private</Checkbox>
@@ -97,6 +112,7 @@ export function WorkshopEdit() {
               <Button type="button" onClick={handleEditReadme}>Edit Readme</Button>
             </div>
             <div className="right">
+              <Tooltip className={`saved${saved ? " saved-show" : ""}`}>Updated</Tooltip>
               <Button type="submit" onClick={handlePublishSync}>Save Changes</Button>
             </div>
           </div>
@@ -113,6 +129,9 @@ const WorkshopEditStyle = styled.main`
   align-items: center;
 
   h1 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     align-self: flex-start;
     font-size: 48px;
     margin-top: 96px;
@@ -131,7 +150,10 @@ const WorkshopEditStyle = styled.main`
     border: 1px solid ${props => props.theme.border};
 
     h2 {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
       font-size: 24px;
       font-weight: 500;
       margin-bottom: 32px;
@@ -174,6 +196,23 @@ const WorkshopEditStyle = styled.main`
       > * {
         display: flex;
         gap: 16px;
+      }
+
+      .right {
+        gap: 8px;
+      }
+
+      .saved {
+        margin-top: 14px;
+        margin-right: -8px;
+        font-size: 13px;
+        color: ${props => props.theme.green};
+        opacity: 0;
+      }
+
+      .saved-show {
+        margin-right: 8px;
+        opacity: 100%;
       }
     }
   }

@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import { Button } from "../../components/Button";
+import { ButtonContrast } from "../../components/ButtonContrast";
 import { Modal } from "../../components/Modal";
+import { Tooltip } from "../../components/Tooltip";
 import { useValue } from "../../hooks/useValue";
 import { useCreateCard, useDeleteCard, useGetCardById, useGetCardsInfoByDeckId, usePatchCard } from "../../services/cardsApi";
 import { getUserData } from "../../utils/helper";
@@ -26,6 +28,8 @@ export function WorkshopCards() {
   const [deleteDisplay, setDeleteDisplay] = useState(false);
   const nextOption = useRef(null);
   const navigate = useNavigate();
+  const [saved, setSaved] = useState(false);
+  const timeout = useRef(null);
 
   // SECTION 1 ===================================================
 
@@ -60,10 +64,17 @@ export function WorkshopCards() {
     }
   }, [createCard.data]);
 
+  useEffect(() => {
+    if (!patchCard.loading && patchCard.data) {
+      setSaved(true);
+      clearTimeout(timeout.current);
+      timeout.current = setTimeout(() => setSaved(false), 1500);
+    }
+  }, [patchCard.loading]);
+
   function handleSave() {
     const front = (tab === "front") ? text : card.front;
     const back = (tab === "back") ? text : card.back;
-    console.log(card.id, { front, back });
     patchCard.act(card.id, { front, back });
   }
 
@@ -111,22 +122,19 @@ export function WorkshopCards() {
   return(
     <BasePage>
       <Modal message="Are you sure?" display={deleteDisplay} setDisplay={setDeleteDisplay}>
-      <ThemeProvider theme={{button: "#262626", fontContrast: "#262626"}}>
-        <Button onClick={handleDeleteCard}>Yes</Button></ThemeProvider>
+        <ButtonContrast onClick={handleDeleteCard}>Yes</ButtonContrast>
         <Button onClick={() => setDeleteDisplay(false)}>Cancel</Button>
       </Modal>
 
       <WorkshopSessionStyle fade={fade}>
         <div className="edit-container">
           <div className="top-options">
-            <ThemeProvider theme={{button: "#262626", fontContrast: "#262626"}}>
-              <Button onClick={() => setDeleteDisplay(true)}>Delete</Button></ThemeProvider>
-            <Button>Preview</Button>
+            <ButtonContrast onClick={() => setDeleteDisplay(true)}>Delete</ButtonContrast>
           </div>
 
           <div className="editor">
             <div className="tabs">
-              <div className={"first " + (tab === "front" && "selected")} onClick={() => {
+              <div className={"first " + (tab === "front" ? "selected" : "")} onClick={() => {
                 if (tab === "front") return;
                 setTab("front");
                 setText(card.front);
@@ -134,7 +142,7 @@ export function WorkshopCards() {
               }}>
                 • &nbsp;Front
               </div>
-              <div className={"last " + (tab === "back" && "selected")} onClick={() => {
+              <div className={"last " + (tab === "back" ? "selected" : "")} onClick={() => {
                 if (tab === "back") return;
                 setTab("back");
                 setText(card.back);
@@ -145,16 +153,20 @@ export function WorkshopCards() {
             </div>
 
             <div className="top">
-              <select onChange={onOptionChangeHandler}>
-                <option disabled>Please choose one option</option>
-                {cardsInfo.data && cardsInfo.data.map((c, i) => <option key={c.id} value={c.id}>{i+1}</option>)}
-              </select>
+              <div className="card-selection">
+                <div>Card #&nbsp;</div>
+                <select onChange={onOptionChangeHandler}>
+                  <option disabled>~</option>
+                  {cardsInfo.data && cardsInfo.data.map((c, i) => <option key={c.id} value={c.id}>{i+1}</option>)}
+                </select>
+              </div>
             </div>
             <textarea className={"text " + (fade && "fade")} value={text} onChange={updateText} spellCheck={false} placeholder="Empty" autoFocus/>
           </div>
           <div className="options">
             <div><Button onClick={handleAddCard}>Add Card</Button></div>
             <div className="save">
+              <Tooltip className={`saved${saved ? " saved-show" : ""}`}>Saved</Tooltip>
               <Button onClick={handleSave}>Save</Button>
               <Button onClick={() => navigate("/workshop/" + deckId)}>Exit</Button>
             </div>
@@ -183,6 +195,19 @@ const WorkshopSessionStyle = styled.main`
       .save {
         display: flex;
         gap: 8px;
+
+        .saved {
+          margin-top: 14px;
+          margin-right: -8px;
+          font-size: 13px;
+          color: ${props => props.theme.green};
+          opacity: 0;
+        }
+
+        .saved-show {
+          margin-right: 8px;
+          opacity: 100%;
+        }
       }
     }
   }
@@ -199,8 +224,7 @@ const WorkshopSessionStyle = styled.main`
     width: 880px;
     border: 1px solid ${props => props.theme.border};
     border-radius: 0 8px 8px;
-    box-shadow: 0px 0px 16px 0px #E8E8E8;
-    box-shadow: 1px 1px 1px #999;
+    box-shadow: 1px 1px 1px ${props => props.theme.border};
     margin-bottom: 16px;
 
     > {
@@ -211,7 +235,7 @@ const WorkshopSessionStyle = styled.main`
       position: absolute;
       top: -40px;
       display: flex;
-
+      
       > * {
         width: 120px;
         height: 40px;
@@ -227,7 +251,7 @@ const WorkshopSessionStyle = styled.main`
       
       .selected {
         background-color: inherit;
-        border-bottom: 1px solid white;
+        border-bottom: 1px solid inherit;
       }
       
       .first {
@@ -241,14 +265,35 @@ const WorkshopSessionStyle = styled.main`
 
     .top {
       display: flex;
-      align-items: center;
-      padding-left: 16px;
+      padding: 0 16px;
       height: 40px;
       border-bottom: 1px solid ${props => props.theme.border};
+      font-size: 14px;
+
+      .card-selection {
+        display: flex;
+        align-items: center;
+
+        div {
+          color: ${props => props.theme.placeholder};
+        }
+
+        select {
+          width: 36px;
+          height: 24px;
+          border: 1px solid ${props => props.theme.border};
+          border-radius: 4px;
+        }
+        
+        > * {
+          background-color: ${props => props.theme.background};
+          color: ${props => props.theme.font};
+        }
+      }
+
     }
 
     .text {
-      transition: all ease-in-out .2s;
       opacity: ${props => props.fade ? 0 : 1};
       font-family: "JetBrains Mono", monospace;
       width: 100%;
@@ -258,6 +303,8 @@ const WorkshopSessionStyle = styled.main`
       padding: 16px;
       font-size: 15.1px;
       border-radius: 8px;
+      background-color: ${props => props.theme.background};
+      color: ${props => props.theme.font};
     }
   }
 `;

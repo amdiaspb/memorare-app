@@ -11,6 +11,9 @@ import { useRedirect } from "../../hooks/useRedirect";
 import { useValue } from "../../hooks/useValue";
 import { useSignin } from "../../services/authApi";
 import { getUserData, setUserData } from "../../utils/helper";
+import { TbDoorEnter } from "react-icons/tb";
+import { IoSparklesSharp } from "react-icons/io5";
+import { IconContext } from "react-icons";
 
 export default function SigninPage() {
   useRedirect(getUserData(), "/decks");
@@ -37,9 +40,11 @@ export default function SigninPage() {
   return (
     <ThemeProvider theme={signin.error ? getTheme("inputError")[mode] : {}}>
     <AuthStyle>
-        <h1>Memorare</h1>
+      <h1><IoSparklesSharp/> Memorare</h1>
       <Form className="form" onSubmit={handleSubmit}>
-        <h2>Sign In</h2>
+        <IconContext.Provider value={{ size: "1.2em" }}>
+          <h2><TbDoorEnter/> Sign In</h2>
+        </IconContext.Provider>
         <div className="inputs">
           <InputText 
             placeholder="E-mail or username" minLength="3" maxLength="16" required
@@ -70,13 +75,25 @@ export const AuthStyle = styled.div`
   background-color: ${props => props.theme.backgroundColor};
 
   h1 {
+    position: relative;
     font-family: "Amiri", serif;
-    font-size: 64px;
     letter-spacing: -3px;
+    color: ${props => props.theme.fontLight};
+    font-size: 64px;
     text-align: center;
     margin-bottom: 48px;
-    color: ${props => props.theme.fontLight};
     user-select: none;
+    margin-right: -16px;
+
+    svg {
+      position: absolute;
+      left: -40px;
+      top: -11px;
+    }
+
+    svg * {
+      color: white;
+    }
   }
 
   .form {
@@ -84,7 +101,11 @@ export const AuthStyle = styled.div`
     flex-direction: column;
 
     h2 {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      margin-right: 24px;
       font-size: 24px;
       font-weight: 500;
       margin-bottom: 32px;

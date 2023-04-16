@@ -1,19 +1,29 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 export function Button(props) {
+  const [pressed, setPressed] = useState(false);
+
   function handleClick(e) {
-    e.target.blur()
+    e.target.blur();
     if (props.onClick) props.onClick(e);
   }
 
   return(
-    <ButtonStyle {...props} onClick={handleClick}>
+    <ButtonStyle {...props} onClick={handleClick} className={pressed ? "pressed" : "normal"}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setTimeout(() => setPressed(false), 25)} 
+      onMouseLeave={(e) => {
+        setPressed(false);
+        e.target.blur();
+      }}
+    >
       {props.children}
     </ButtonStyle>
   );
 }
 
-const ButtonStyle = styled.button`
+export const ButtonStyle = styled.button`
   font: inherit;
   appearance: none;
   outline: none;
@@ -25,7 +35,11 @@ const ButtonStyle = styled.button`
   white-space: nowrap;
   height: 40px;
 
-  :focus, :hover {
+  &.pressed {
+    transform: scale(0.95);
+  }
+
+  &.normal:is(:hover, :focus) {
     background-color: ${props => props.theme.background};
     color: ${props => props.theme.fontContrast};
     box-shadow: 0px 0px 0px 2px ${props => props.theme.button};

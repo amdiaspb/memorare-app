@@ -1,26 +1,46 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { setUserData } from "../utils/helper";
+import { TbCards, TbBook, TbTools, TbDoorExit } from "react-icons/tb";
+import { IoSparklesSharp } from "react-icons/io5";
+import { IconContext } from "react-icons";
+import { useState } from "react";
+import { Modal } from "../components/Modal";
+import { ButtonContrast } from "../components/ButtonContrast";
+import { Button } from "../components/Button";
 
 export function Navbar({ onExit }) {
   const navigate = useNavigate();
+  const [logoutDisplay, setLogoutDisplay] = useState(false);
 
   function goTo(path, runOnExit = true) {
     //if (runOnExit && onExit) onExit();
     navigate(path);
   }
 
+  function handleLogout() {
+    setUserData(null);
+    goTo("/signin");
+  }
+
   return (
     <NavbarStyle>
+      <Modal message="Are you sure?" display={logoutDisplay} setDisplay={setLogoutDisplay}>
+        <ButtonContrast onClick={handleLogout}>Yes</ButtonContrast>
+        <Button onClick={() => setLogoutDisplay(false)}>Cancel</Button>
+      </Modal>
+
+      <h1 onClick={() => goTo("/decks")}><IoSparklesSharp/> <span>Memorare</span></h1>
+      <IconContext.Provider value={{ size: "1.6em" }}>
       <ul>
-        <li onClick={() => goTo("/decks")}>Decks</li>
-        <li onClick={() => goTo("/studies")}>Studies</li>
-        <li onClick={() => goTo("/workshop")}>Workshop</li>
-        <li className="logout" onClick={() => {
-          setUserData(null);
-          goTo("/signin")
-        }}>Logout</li>
+        <li onClick={() => goTo("/decks")}><TbCards/> Decks</li>
+        <li onClick={() => goTo("/studies")}><TbBook/> Studies</li>
+        <li onClick={() => goTo("/workshop")}><TbTools/> Workshop</li>
+        <li className="logout" onClick={() => setLogoutDisplay(true)}>
+          <TbDoorExit/> Logout
+        </li>
       </ul>
+      </IconContext.Provider>
     </NavbarStyle>
   );
 }
@@ -36,11 +56,27 @@ const NavbarStyle = styled.nav`
   border-right: 1px solid ${props => props.theme.border};
   background-color: ${props => props.theme.background};
 
+  h1 {
+    font-size: 40px;
+    display:flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 32px 0;
+    user-select: none;
+    cursor: pointer;
+    margin-right: -4px;
+
+    span {
+      font-family: "Amiri", serif;
+      letter-spacing: -3px;
+      margin-top: 4px;
+    }
+  }
+
   ul {
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin-top: 96px;
 
     li {
       width: 100%;
@@ -53,6 +89,8 @@ const NavbarStyle = styled.nav`
       border-left: none;
       margin-top: -1px;
       cursor: pointer;
+      gap: 8px;
+      font-weight: 500;
 
       :hover {
         background-color: ${props => props.theme.border};

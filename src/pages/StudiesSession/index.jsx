@@ -53,8 +53,8 @@ export function StudiesSession() {
 
   useEffect(() => {
     if (deckSnapshot.data) {
-      console.log("DECK-SNAPSHOT:", deckSnapshot.data);
-      console.log("CARDS:", JSON.parse(deckSnapshot.data.cards));
+/*       console.log("DECK-SNAPSHOT:", deckSnapshot.data);
+      console.log("CARDS:", JSON.parse(deckSnapshot.data.cards)); */
       setCards(JSON.parse(deckSnapshot.data.cards));
     }
   }, [deckSnapshot.data]);
@@ -62,14 +62,14 @@ export function StudiesSession() {
   // DEBUG
   useEffect(() => {
     if (content) {
-      console.log("CONTENT:", content);
+      /* console.log("CONTENT:", content); */
       decideNextCard();
     }
   }, [content]);
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (state) console.log("STATE:", state);
-  }, [state]);
+  }, [state]); */
 
   // SECTION 2 ===================================================
 
@@ -243,10 +243,18 @@ export function StudiesSession() {
             <Button onClick={() => setShow(false)}>Hide</Button>
           </> : <Button onClick={() => setShow(true)}>Show</Button>}
         </div>
-      </StudiesSessionStyle> : <div>You finished your studies today :D</div>}
+      </StudiesSessionStyle> : done && <FinishedStyle>This deck is done for the day! Congrats :D</FinishedStyle>}
     </BasePage>
   );
 }
+
+const FinishedStyle = styled.main`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 320px;
+  font-size: 32px;
+`;
 
 const StudiesSessionStyle = styled.main`
   display: flex;

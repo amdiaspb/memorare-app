@@ -59,15 +59,15 @@ const InfoMainStyle = styled.div`
     }
 
     .new .value {
-      color: blue;
+      color: ${props => props.theme.blue};
     }
 
     .learn .value {
-      color: red;
+      color: ${props => props.theme.red};
     }
 
     .review .value {
-      color: green;
+      color: ${props => props.theme.green};
     }
   }
 

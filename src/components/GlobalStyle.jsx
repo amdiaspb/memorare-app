@@ -38,11 +38,14 @@ export function getTheme(theme = "light") {
     fontContrast: "#3175C2",
     placeholder: "#757575",
     placeholderSec: "#757575",
-    secondTab: "#eeeeee"
+    secondTab: "#eeeeee",
+    blue: "#4383ee",
+    red: "#d53855",
+    green: "#1d9c4d",
   }
 
   if (theme === "dark") return {
-    background: "#202124",
+    background: "#24292E",
     backgroundColor: "#2b64b0",
     border: "#3c4043",
     font: "white",
@@ -53,7 +56,10 @@ export function getTheme(theme = "light") {
     button: "#2b64b0",
     fontContrast: "white",
     placeholder: "#84898f",
-    placeholderSec: "#84898f"
+    placeholderSec: "#84898f",
+    blue: "#54a0ff",
+    red: "#d53855",
+    green: "#2fbb61",
   }
 
   if (theme === "inputError") return {
@@ -68,4 +74,5 @@ export function getTheme(theme = "light") {
       placeholderSec: "#f35a48"
     }
   }
+
 }

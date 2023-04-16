@@ -5,6 +5,8 @@ import { useContext } from "react";
 import { useState } from 'react';
 import { useEffect } from 'react';
 import styled from "styled-components";
+import { TbSun, TbMoon } from "react-icons/tb";
+import { IconContext } from "react-icons";
 
 import SignupPage from "./pages/Signup";
 import SigninPage from "./pages/Signin";
@@ -20,6 +22,7 @@ import WorkshopPage from './pages/Workshop';
 import { WorkshopEdit } from './pages/Workshop/WorkshopEdit';
 import { WorkshopCards } from './pages/WorkshopSession/WorkshopCards';
 import { WorkshopReadme } from './pages/WorkshopSession/WorkshopReadme';
+
 
 import dayjs from 'dayjs';
 
@@ -68,7 +71,9 @@ function ThemeButton() {
 
   return (
     <ThemeButtonStyle onClick={switchTheme}>
-      {mode}, {time}
+      <IconContext.Provider value={{ size: "1.8em" }}>
+      {mode === "light" ? <TbSun/> : <TbMoon/>} {mode}, {time}
+      </IconContext.Provider>
     </ThemeButtonStyle>
   );
 }
@@ -79,9 +84,13 @@ const ThemeButtonStyle = styled.button`
   position: fixed;
   right: 32px;
   top: 32px;
-  padding: 16px;
+  padding: 12px;
   border: 1px solid ${props => props.theme.border};
   border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 export default App;

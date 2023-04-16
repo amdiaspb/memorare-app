@@ -4,6 +4,8 @@ import { BasePage } from "../BasePage";
 import styled from "styled-components";
 import { DeckItem } from "../../components/DeckItem";
 import { useNavigate } from "react-router-dom";
+import { TbCards } from "react-icons/tb";
+import { IconContext } from "react-icons";
 
 export default function DecksPage() {
   const decks = useGetDecks();
@@ -20,12 +22,15 @@ export default function DecksPage() {
   return (
     <BasePage>
       <DecksPageStyle>
-        <h1>| &nbsp;Decks</h1>
+        <IconContext.Provider value={{ size: "1.4em" }}>
+        <h1><TbCards/> Decks</h1>
         <ol>
-          {decks.data && decks.data.map(d => 
-            <DeckItem key={d.id} deck={d} onClick={() => handleClick(d.id)}/>
-          )}
+          {decks.data?.length
+            ? decks.data.map(d => <DeckItem key={d.id} deck={d} onClick={() => handleClick(d.id)}/>)
+            : (!decks.loading && <div>What a pickle! There are no public decks available, but you can create your own on the workshop menu.</div>)
+          }
         </ol>
+        </IconContext.Provider>
       </DecksPageStyle>
     </BasePage>
   );
@@ -33,6 +38,9 @@ export default function DecksPage() {
 
 const DecksPageStyle = styled.main`
   h1 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     align-self: flex-start;
     font-size: 48px;
     margin-top: 96px;
